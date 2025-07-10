@@ -4,6 +4,9 @@
 # Webhook url
 Makefile
 
+# Webhook data
+webhook_logger/data/*
+
 # Google
 */token.json
 
