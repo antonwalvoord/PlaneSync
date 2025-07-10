@@ -1,0 +1,12 @@
+# Credentials
+*/credentials.json
+
+# Webhook url
+Makefile
+
+# Google
+*/token.json
+
+# Pycache
+__pycache__/*
+*.pyc
