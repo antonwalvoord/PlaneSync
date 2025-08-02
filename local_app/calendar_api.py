@@ -9,7 +9,7 @@ from googleapiclient.errors import HttpError
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
-calendarId = "c_995ce50a3385438bcc66d34fd4d5faf5ff95339d49d31d40b0de514ba839d822@group.calendar.google.com"
+calendarId = "c_5bfd3aeff2fb103c65e0b26d07d81c8a618d4da5046ea4d918a04fb6190b35a9@group.calendar.google.com"
 tokenPath = "/home/aewal/NFR26/timeline_tools/local_app/token.json"
 credPath = "/home/aewal/NFR26/timeline_tools/local_app/credentials.json"
 

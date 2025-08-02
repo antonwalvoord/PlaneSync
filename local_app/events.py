@@ -21,6 +21,8 @@ def determine_color(hook):
                 return "7"
             case "Suspension":
                 return "8"
+            case "Operations":
+                return "9"
     return None
 
 
