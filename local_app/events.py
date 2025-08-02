@@ -67,11 +67,18 @@ def update_event(hook, event):
         title = hook["data"]["name"]
         information = hook["data"]["description_html"]
 
+        # If there is no new due date we cannot update the
+        # calendar appropriately and should return an exception
+        if due_date is None:
+            print("DUE DATE IS NONE")
+            return Exception
+
     # There may only be an id if this is an update
     # due to a deletion
     except Exception:
         if color is not None:
             event['colorId'] = color
+        print("\n\n    ran into exception\n\n")
         return event
 
     else:
@@ -88,3 +95,9 @@ def update_event(hook, event):
         }
 
         return event
+
+
+def remove_module(hook, event):
+    print("Removing from module...")
+    event['colorId'] = None
+    return event

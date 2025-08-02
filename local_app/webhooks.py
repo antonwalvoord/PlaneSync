@@ -5,8 +5,7 @@ import events
 
 # Parse webhook input and return Json information
 def parse_webhook(input):
-    json_object = input[input.find("{"):]
-    json_dict: dict = json.loads(json_object)
+    json_dict: dict = json.loads(input)
     return json_dict
 
 
@@ -100,16 +99,42 @@ def update_issue(hook):
         print("Issue has no calendar event, creating new event")
         create_issue(hook)
         return
-    # if it does, confirm it isn't cancelled and then update it
-    if event["status"] != "cancelled":
+    # if it does, confirm it isn't cancelled and we aren't
+    # attempting to delete from module and then update it
+    if event["status"] != "cancelled" and hook["action"] != "deleted":
         event = events.update_event(hook, event)
+
+        if event is Exception:
+            print("Attempted to update a calendar event without new due date... aborting")
+
+        else:
+            calendar_api.service.events().update(
+                calendarId=calendar_api.calendarId,
+                eventId=issueId,
+                body=event
+            ).execute()
+            print("Successfully updated!")
+    # Check if we are attempting to remove module from event
+    elif hook["action"] == "deleted":
+        events.remove_module(hook, event)
+        # Push the changes
         calendar_api.service.events().update(
             calendarId=calendar_api.calendarId,
             eventId=issueId,
             body=event
         ).execute()
+        print("Successfully removed from module!")
     else:
         print("Event already cancelled")
+        print("Attempting to restore from trash...")
+        calendar_api.service.events().patch(
+            calendarId=calendar_api.calendarId,
+            eventId=issueId,
+            body={
+                "status": "confirmed"
+            }
+        ).execute()
+        print("Successfully restored!")
 
 
 # Handle webhook json when recieved

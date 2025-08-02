@@ -1,23 +1,24 @@
-import socket
+import os
 import webhooks
 
-HOST = '127.0.0.1'  # Localhost
-PORT = 8080        # Arbitrary non-privileged port
+webhook_file = "/home/aewal/NFR26/timeline_tools/local_app/data/webhooks.json"
+line = 1
 
+with open(webhook_file, 'r') as webhook_json:
 
-# Create a TCP/IP socket
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sckt:
-    sckt.bind((HOST, PORT))        # Bind to localhost on port 8080
-    sckt.listen()                  # Start listening for incoming connections
-    print(f"Listening on {HOST}:{PORT}...")
+    print(f"Processing file: {webhook_json.name}")
 
-    while True:
-        conn, addr = sckt.accept()  # Accept new connection
-        with conn:
-            print(f"\nConnected by {addr}")
-            buffer = conn.recv(8192)  # Receive data (in bytes)
-            if buffer:
-                data_str = buffer.decode('utf-8')
-                hook = webhooks.parse_webhook(data_str)
-                webhooks.handle_webhook(hook)
-            conn.close()  # Close connection when finished
+    for line in webhook_json:
+        print(f"\nProcessing line {line}")
+        if line:
+            hook = webhooks.parse_webhook(line)
+            webhooks.handle_webhook(hook)
+
+prompt_clear = input("\n\n\nClear webhook data? (y/n)\n")
+if prompt_clear == "y":
+    print("...Clearing webhook data")
+    os.remove(webhook_file)
+    print("Webhook data cleared")
+
+else:
+    print("Exiting without clearing")
